@@ -58,17 +58,65 @@ data_frame[str_kth] = data_frame[str_kth].astype(int)
 data_frame[str_target_value] = data_frame[str_target_value].astype(int)
 
 sanity_check = data_frame.groupby([str_number_of_dice, str_die_type, str_kth])[str_probability].sum()
-assert(numpy.all(sanity_check.values == 1.0))
+assert (numpy.all(sanity_check.values == 1.0))
 data_frame.to_csv('result_July30th_22.csv', index=False)
 
+for kth in [1, 2, 3, 4]:
+    for die_type in [10, 12, 20]:
+        for number_of_dice in range(1, 6):
+            if kth > number_of_dice:
+                continue
+            target_values = data_frame[(data_frame[str_die_type] == die_type) & (data_frame[str_kth] == kth) & (
+                        data_frame[str_number_of_dice] == number_of_dice)][str_target_value].to_numpy()
+            probability_values = data_frame[(data_frame[str_die_type] == die_type) & (data_frame[str_kth] == kth) & (
+                        data_frame[str_number_of_dice] == number_of_dice)][str_probability].to_numpy()
+            expectation_value = numpy.dot(target_values, probability_values)
+            print(f"Expectation[{number_of_dice}D{die_type}, {kth}-highest] = {expectation_value}")
 
-z1 = data_frame[
-    (data_frame[str_die_type] == 20) & (data_frame[str_kth] == 3) & (data_frame[str_number_of_dice] == 3)].plot(
+z2 = data_frame[
+    (data_frame[str_die_type] == 20) & (data_frame[str_kth] == 1) & (data_frame[str_number_of_dice] == 1)].plot(
     x=str_target_value, y=str_probability).plot()
+plt.title('1D20, 1st')
+
+
+
+#z1 = data_frame[
+#    (data_frame[str_die_type] == 20) & (data_frame[str_kth] == 3) & (data_frame[str_number_of_dice] == 3)].plot(
+#    x=str_target_value, y=str_probability).plot()
+#plt.title('3D20, 3rd')
 z2 = data_frame[
     (data_frame[str_die_type] == 20) & (data_frame[str_kth] == 2) & (data_frame[str_number_of_dice] == 3)].plot(
     x=str_target_value, y=str_probability).plot()
+plt.title('3D20, 2nd')
+#z3 = data_frame[
+#    (data_frame[str_die_type] == 20) & (data_frame[str_kth] == 1) & (data_frame[str_number_of_dice] == 3)].plot(
+#    x=str_target_value, y=str_probability).plot()
+#plt.title('3D20, 1st')
+
+#z1 = data_frame[
+#    (data_frame[str_die_type] == 20) & (data_frame[str_kth] == 3) & (data_frame[str_number_of_dice] == 4)].plot(
+#    x=str_target_value, y=str_probability).plot()
+#plt.title('4D20, 3rd')
+#z2 = data_frame[
+#    (data_frame[str_die_type] == 20) & (data_frame[str_kth] == 2) & (data_frame[str_number_of_dice] == 4)].plot(
+#    x=str_target_value, y=str_probability).plot()
+#plt.title('4D20, 2nd')
+#z3 = data_frame[
+#    (data_frame[str_die_type] == 20) & (data_frame[str_kth] == 1) & (data_frame[str_number_of_dice] == 4)].plot(
+#    x=str_target_value, y=str_probability).plot()
+#plt.title('4D20, 1st')
+
+#z1 = data_frame[
+#    (data_frame[str_die_type] == 20) & (data_frame[str_kth] == 3) & (data_frame[str_number_of_dice] == 5)].plot(
+#    x=str_target_value, y=str_probability).plot()
+#plt.title('5D20, 1st')
+#z2 = data_frame[
+#    (data_frame[str_die_type] == 20) & (data_frame[str_kth] == 2) & (data_frame[str_number_of_dice] == 5)].plot(
+#    x=str_target_value, y=str_probability).plot()
+#plt.title('5D20, 2nd')
 z3 = data_frame[
-    (data_frame[str_die_type] == 20) & (data_frame[str_kth] == 1) & (data_frame[str_number_of_dice] == 3)].plot(
+    (data_frame[str_die_type] == 20) & (data_frame[str_kth] == 1) & (data_frame[str_number_of_dice] == 5)].plot(
     x=str_target_value, y=str_probability).plot()
+plt.title('5D20, 3rd')
+
 plt.show()
