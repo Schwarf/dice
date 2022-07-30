@@ -41,7 +41,9 @@ data_frame = pandas.DataFrame({str_number_of_dice: [],
 
 for kth in [1, 2, 3, 4]:
     for die_type in [10, 12, 20]:
-        for number_of_dice in range(3, 6):
+        for number_of_dice in range(1, 6):
+            if kth > number_of_dice:
+                continue
             for target in range(1, die_type + 1):
                 direct_result = get_probability_for_kth_highest_roll_using_n_dice(die_type, number_of_dice, target, kth)
                 # test_with_rolling_dice(number_of_dice, die_type, target, direct_result)
@@ -56,9 +58,9 @@ data_frame[str_kth] = data_frame[str_kth].astype(int)
 data_frame[str_target_value] = data_frame[str_target_value].astype(int)
 
 sanity_check = data_frame.groupby([str_number_of_dice, str_die_type, str_kth])[str_probability].sum()
-assert (numpy.all(sanity_check.values == 1.) == True)
-
+assert(numpy.all(sanity_check.values == 1.0))
 data_frame.to_csv('result_July30th_22.csv', index=False)
+
 
 z1 = data_frame[
     (data_frame[str_die_type] == 20) & (data_frame[str_kth] == 3) & (data_frame[str_number_of_dice] == 3)].plot(
