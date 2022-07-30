@@ -1,6 +1,7 @@
 import numpy
 import pandas
 from matplotlib import pyplot as plt
+
 from compute_probability import get_probability_for_kth_highest_roll_using_n_dice
 from throw_dice import ThrowDice
 
@@ -25,6 +26,7 @@ def compare_with_rolling_dice(number_of_dice: int, die_type: int, target, direct
 
     return rolling_result
 
+
 str_number_of_dice = 'number_of_dice'
 str_die_type = 'die_type'
 str_kth = 'kth'
@@ -36,8 +38,6 @@ data_frame = pandas.DataFrame({str_number_of_dice: [],
                                str_kth: [],
                                str_target_value: [],
                                str_probability: []}, dtype=int)
-
-
 
 for kth in [1, 2, 3, 4]:
     for die_type in [10, 12, 20]:
@@ -55,14 +55,18 @@ data_frame[str_die_type] = data_frame[str_die_type].astype(int)
 data_frame[str_kth] = data_frame[str_kth].astype(int)
 data_frame[str_target_value] = data_frame[str_target_value].astype(int)
 
+sanity_check = data_frame.groupby([str_number_of_dice, str_die_type, str_kth])[str_probability].sum()
+assert (numpy.all(sanity_check.values == 1.) == True)
 
-print(data_frame)
-data_frame.to_csv('result_July30th_22.csv', index=False )
+data_frame.to_csv('result_July30th_22.csv', index=False)
 
-x = data_frame.groupby([str_number_of_dice, str_die_type, str_kth])[str_probability].sum()
-
-z1 = data_frame[(data_frame[str_die_type]==20) & (data_frame[str_kth]==3) & (data_frame[str_number_of_dice]==3)].plot(x=str_target_value, y=str_probability).plot()
-z2 = data_frame[(data_frame[str_die_type]==20) & (data_frame[str_kth]==2) & (data_frame[str_number_of_dice]==3)].plot(x=str_target_value, y=str_probability).plot()
-z3 = data_frame[(data_frame[str_die_type]==20) & (data_frame[str_kth]==1) & (data_frame[str_number_of_dice]==3)].plot(x=str_target_value, y=str_probability).plot()
+z1 = data_frame[
+    (data_frame[str_die_type] == 20) & (data_frame[str_kth] == 3) & (data_frame[str_number_of_dice] == 3)].plot(
+    x=str_target_value, y=str_probability).plot()
+z2 = data_frame[
+    (data_frame[str_die_type] == 20) & (data_frame[str_kth] == 2) & (data_frame[str_number_of_dice] == 3)].plot(
+    x=str_target_value, y=str_probability).plot()
+z3 = data_frame[
+    (data_frame[str_die_type] == 20) & (data_frame[str_kth] == 1) & (data_frame[str_number_of_dice] == 3)].plot(
+    x=str_target_value, y=str_probability).plot()
 plt.show()
-print(numpy.all(x.values == 1.))
