@@ -25,12 +25,19 @@ def compare_with_rolling_dice(number_of_dice: int, die_type: int, target, direct
 
     return rolling_result
 
+str_number_of_dice = 'number_of_dice'
+str_die_type = 'die_type'
+str_kth = 'kth'
+str_target_value = 'target_value'
+str_probability = 'probability'
 
-data_frame = pandas.DataFrame({'number_of_dice': [],
-                               'die_type': [],
-                               'kth': [],
-                               'target_value': [],
-                               'probability': []}, dtype=int)
+data_frame = pandas.DataFrame({str_number_of_dice: [],
+                               str_die_type: [],
+                               str_kth: [],
+                               str_target_value: [],
+                               str_probability: []}, dtype=int)
+
+
 
 for kth in [1, 2, 3]:
     for die_type in [10, 12, 20]:
@@ -40,12 +47,17 @@ for kth in [1, 2, 3]:
                 # test_with_rolling_dice(number_of_dice, die_type, target, direct_result)
                 result_string = f"{number_of_dice}D{die_type} with {kth}th counting for target-value {target}: direct_result = {direct_result}"
                 data_frame = data_frame.append(
-                    {'number_of_dice': number_of_dice, 'die_type': die_type, "kth": kth, 'target_value': target,
-                     "probability": direct_result}, ignore_index=True)
+                    {str_number_of_dice: number_of_dice, str_die_type: die_type, str_kth: kth, str_target_value: target,
+                     str_probability: direct_result}, ignore_index=True)
 
-data_frame['number_of_dice'] = data_frame['number_of_dice'].astype(int)
-data_frame['die_type'] = data_frame['die_type'].astype(int)
-data_frame['kth'] = data_frame['kth'].astype(int)
-data_frame['target_value'] = data_frame['target_value'].astype(int)
+data_frame[str_number_of_dice] = data_frame[str_number_of_dice].astype(int)
+data_frame[str_die_type] = data_frame[str_die_type].astype(int)
+data_frame[str_kth] = data_frame[str_kth].astype(int)
+data_frame[str_target_value] = data_frame[str_target_value].astype(int)
+
+
 print(data_frame)
 data_frame.to_csv('result_July30th_22.csv', index=False )
+
+x = data_frame.groupby([str_number_of_dice, str_die_type, str_kth])[str_probability].sum()
+print(numpy.all(x.values == 1.))
